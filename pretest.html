@@ -1,0 +1,661 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Virtual Labs | Adaptive Signal Processing Lab - Pretest</title>
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+
+    body.body-blurred #page-wrapper {
+      filter: blur(5px);
+      pointer-events: none;
+      user-select: none;
+    }
+    body.body-blurred { overflow: hidden; }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadeInUp { animation: fadeInUp 0.6s ease-out forwards; }
+
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-20px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    .animate-slideInLeft { animation: slideInLeft 0.5s ease-out forwards; }
+
+    .menu-item:nth-child(1) { animation-delay: 0.1s; }
+    .menu-item:nth-child(2) { animation-delay: 0.2s; }
+    .menu-item:nth-child(3) { animation-delay: 0.3s; }
+    .menu-item:nth-child(4) { animation-delay: 0.4s; }
+    .menu-item:nth-child(5) { animation-delay: 0.5s; }
+    .menu-item:nth-child(6) { animation-delay: 0.6s; }
+    .menu-item:nth-child(7) { animation-delay: 0.7s; }
+    .menu-item:nth-child(8) { animation-delay: 0.8s; }
+
+    .vl-header {
+      height: 70px;
+      background: linear-gradient(120deg, #021a2c, #064073, #0b60a8);
+      box-shadow: 0 10px 30px rgba(2,26,44,0.35);
+    }
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+    }
+    .top-nav { gap: 1.5rem; align-items: center; }
+    .nav-link {
+      position: relative;
+      color: #e2e8f0;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      transition: color 150ms ease, transform 150ms ease;
+      border-radius: 0.375rem;
+      text-decoration: none;
+    }
+    .nav-link:hover, .nav-link:focus {
+      color: #fff;
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.1);
+    }
+    .logo-container { display: flex; align-items: center; gap: 0.75rem; }
+    .logo-glow { transition: transform 200ms ease, box-shadow 200ms ease; }
+    .logo-glow:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(11,96,168,0.5); }
+    .logo-text { display: flex; flex-direction: column; justify-content: center; }
+    .logo-title { color: #fff; font-size: 1.25rem; font-weight: 700; line-height: 1.2; margin: 0; }
+    .logo-subtitle { color: #bfdbfe; font-size: 0.875rem; font-weight: 500; margin: 0; }
+
+    .vl-footer {
+      background: linear-gradient(120deg, #021a2c, #064073, #0b60a8);
+      color: #e2e8f0;
+      padding: 1.25rem 0;
+      box-shadow: 0 -10px 30px rgba(2,26,44,0.5);
+      border-top: 1px solid rgba(255,255,255,0.1);
+      z-index: 50;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+    }
+    .footer-inner { max-width: 1200px; margin: 0 auto; text-align: center; padding: 0 1.5rem; }
+
+    .vl-sidebar { background: #f8fafc; border-right: 1px solid #e2e8f0; }
+    .vl-card { border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+
+    .menu-item {
+      border-left: 3px solid transparent;
+      background: rgba(255,255,255,0.6);
+      border-radius: 0.75rem;
+      transition: transform 220ms ease, box-shadow 220ms ease, background 220ms ease;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(4px);
+    }
+    .menu-item::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, rgba(11,96,168,0.15), transparent 60%);
+      opacity: 0;
+      transform: translateX(-100%);
+      transition: opacity 220ms ease, transform 220ms ease;
+    }
+    .menu-item:hover::after, .menu-item.active::after { opacity: 1; transform: translateX(0); }
+    .menu-item:hover, .menu-item.active {
+      border-left-color: #0b60a8;
+      background: rgba(255,255,255,0.85);
+      transform: translateX(6px);
+      box-shadow: 0 12px 30px rgba(2,26,44,0.15);
+    }
+
+    .bg-blue-600, .hover\:bg-blue-700:hover {
+      background: linear-gradient(120deg, #021a2c, #064073, #0b60a8);
+    }
+    .text-blue-600, .hover\:text-blue-600:hover { color: #0b60a8; }
+    .border-blue-600 { border-color: #0b60a8; }
+
+    #check-btn:disabled {
+      opacity: 0.55; cursor: not-allowed;
+      background: linear-gradient(120deg, #cbd5e1, #e2e8f0);
+      color: #475569; border-color: #cbd5e1; box-shadow: none;
+    }
+    #refresh-btn:disabled {
+      opacity: 0.55; cursor: not-allowed;
+      background: linear-gradient(120deg, #e2e8f0, #f8fafc);
+      color: #475569; border-color: #e2e8f0; box-shadow: none;
+    }
+
+    .mcq {
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 12px 14px;
+      background: linear-gradient(135deg, #f8fafc, #eef2ff);
+      box-shadow: 0 6px 12px rgba(15,23,42,0.06);
+    }
+    .option-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      margin-top: 8px;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      background: linear-gradient(120deg, #ffffff, #f8fbff);
+      transition: all 160ms ease;
+      cursor: pointer;
+    }
+    .option-label:hover { border-color: #93c5fd; box-shadow: 0 10px 20px rgba(14,165,233,0.18); transform: translateY(-1px); }
+    .option-label input { accent-color: #0b60a8; width: 18px; height: 18px; }
+    .option-label input:disabled { opacity: 1; filter: none; cursor: default; }
+    .option-label.disabled-option { opacity: 0.82; border-style: dashed; }
+    .option-label.selected-option { border-color: #0ea5e9; background: linear-gradient(135deg, #e0f2fe, #eef2ff); box-shadow: 0 12px 26px rgba(14,165,233,0.22); }
+    .option-label.correct-option  { border-color: #22c55e; background: linear-gradient(135deg, #ecfdf3, #d1fae5); box-shadow: 0 12px 26px rgba(34,197,94,0.25); }
+    .option-label.wrong-option    { border-color: #ef4444; background: linear-gradient(135deg, #fef2f2, #fee2e2); box-shadow: 0 12px 26px rgba(239,68,68,0.22); }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(15,23,42,0.55);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal.show { display: flex; }
+    .modal-box {
+      background: #fff;
+      border-radius: 16px;
+      padding: 2rem 2rem 1.5rem;
+      max-width: 460px;
+      width: 90%;
+      box-shadow: 0 30px 60px rgba(2,26,44,0.3);
+    }
+    .modal-box h2 { font-size: 1.15rem; font-weight: 700; color: #0f172a; margin: 0 0 0.75rem; }
+    .modal-box p  { font-size: 0.95rem; color: #334155; line-height: 1.6; margin: 0 0 1.25rem; }
+    .modal-actions { display: flex; justify-content: flex-end; }
+    .modal-close-btn {
+      padding: 0.5rem 1.4rem;
+      background: linear-gradient(120deg, #021a2c, #0b60a8);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    .modal-close-btn:hover { opacity: 0.88; }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+  <!-- HEADER -->
+  <header class="vl-header shadow-xl fixed top-0 left-0 right-0 z-50">
+    <div class="header-inner px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between py-1 w-full gap-3">
+        <a href="../index.html" class="logo-container hover:no-underline focus:no-underline">
+          <img
+            src="images/iitrLogo.png"
+            alt="Virtual Labs Logo"
+            class="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 rounded-xl object-contain bg-white p-1.5 logo-glow"
+            onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect fill=%22%230b60a8%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%22 y=%2255%22 font-size=%2240%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22Arial%22 font-weight=%22bold%22%3EVL%3C/text%3E%3C/svg%3E'"
+          >
+          <div class="logo-text">
+            <h1 class="logo-title text-base sm:text-lg lg:text-xl">Virtual Labs</h1>
+            <p class="logo-subtitle text-[10px] sm:text-xs lg:text-sm">IIT Roorkee</p>
+          </div>
+        </a>
+        <nav class="top-nav hidden lg:flex items-center gap-2 lg:gap-3">
+          <a href="../index.html" class="nav-link">Home</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <div class="flex pt-16 min-h-screen">
+    <!-- Sidebar -->
+    <aside class="vl-sidebar w-64 fixed inset-y-0 left-0 z-40 overflow-y-auto transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out pt-20 lg:pt-6 pb-6">
+      <div class="px-4">
+        <h2 class="text-lg font-semibold text-gray-800 mb-6 border-b border-gray-200 pb-4">Experiment Navigation</h2>
+        <nav class="space-y-1">
+          <a href="index.html" class="menu-item flex items-center px-4 py-3 text-gray-700 rounded-lg group">
+            <svg class="w-5 h-5 mr-3 opacity-70 group-hover:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            Aim
+          </a>
+          <a href="theory.html" class="menu-item flex items-center px-4 py-3 text-gray-700 rounded-lg group">
+            <svg class="w-5 h-5 mr-3 opacity-70 group-hover:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+            Theory
+          </a>
+          <a href="pretest.html" class="menu-item active flex items-center px-4 py-3 text-gray-700 rounded-lg group">
+            <svg class="w-5 h-5 mr-3 opacity-70 group-hover:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            Pretest
+          </a>
+          <a href="procedure.html" class="menu-item flex items-center px-4 py-3 text-gray-700 rounded-lg group">
+            <svg class="w-5 h-5 mr-3 opacity-70 group-hover:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2m-6 9l2 2 4-4"></path></svg>
+            Procedure
+          </a>
+          <a href="simulation.html" class="menu-item flex items-center px-4 py-3 text-gray-700 rounded-lg group">
+            <svg class="w-5 h-5 mr-3 opacity-70 group-hover:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+            Simulation
+          </a>
+          <a href="posttest.html" class="menu-item flex items-center px-4 py-3 text-gray-700 rounded-lg group">
+            <svg class="w-5 h-5 mr-3 opacity-70 group-hover:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            Post Test
+          </a>
+          <a href="references.html" class="menu-item flex items-center px-4 py-3 text-gray-700 rounded-lg group">
+            <svg class="w-5 h-5 mr-3 opacity-70 group-hover:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path></svg>
+            References
+          </a>
+          <a href="contributors.html" class="menu-item flex items-center px-4 py-3 text-gray-700 rounded-lg group">
+            <svg class="w-5 h-5 mr-3 opacity-70 group-hover:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+            Contributors
+          </a>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 lg:ml-64 p-6 pb-24">
+      <!-- Breadcrumb -->
+      <nav class="mb-6 text-sm text-gray-600 animate-slideInLeft flex items-center space-x-2">
+        <a href="../index.html" class="hover:text-blue-600 transition-colors">Home</a>
+        <span>&gt;</span>
+        <a href="index.html" class="hover:text-blue-600">Adaptive Signal Processing Lab</a>
+        <span>&gt;</span>
+        <span class="text-gray-800 font-medium">Pretest</span>
+      </nav>
+
+      <!-- TITLE CARD -->
+      <div class="vl-card mb-4 overflow-hidden animate-fadeInUp rounded-lg">
+        <div class="px-4 py-3" style="background: linear-gradient(120deg, #021a2c, #064073, #0b60a8);">
+          <h1 class="text-lg md:text-xl font-bold text-white text-center leading-snug">
+            Adaptive Filtering of Bio-signals Using LMS and RLS Algorithms
+          </h1>
+        </div>
+      </div>
+
+      <!-- MCQ SECTION -->
+      <section class="section-content vl-card p-6 animate-fadeInUp">
+        <h2 class="text-xl font-bold text-gray-800 mb-2">Pre Test</h2>
+        <p class="text-sm text-gray-500 mb-6">5 questions are shown at a time. Click <strong>Refresh Questions</strong> to load a new random set.</p>
+
+        <div id="mcq-container" class="space-y-6 text-gray-700 text-base"></div>
+
+        <div class="mt-6 flex items-center gap-3">
+          <div class="flex gap-2">
+            <button id="refresh-btn" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg font-semibold">
+              Refresh Questions
+            </button>
+            <button id="check-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold">
+              Check Answers
+            </button>
+          </div>
+          <div class="flex-1"></div>
+        </div>
+        <p id="result" class="mt-4 text-xl font-semibold"></p>
+      </section>
+    </main>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="vl-footer fixed bottom-0 left-0 right-0 z-50 h-12">
+    <div class="footer-inner flex items-center justify-center h-full px-4">
+      <p class="text-xs md:text-sm text-center text-sky-100 font-medium tracking-wide">
+        &copy; 2026 Virtual Labs &mdash; Lab contributed by IIT Roorkee
+      </p>
+    </div>
+  </footer>
+
+  <!-- Alert Modal -->
+  <div id="warningModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalMessage">
+    <div class="modal-box" role="document">
+      <h2 id="modalTitle">Alert</h2>
+      <p id="modalMessage"></p>
+      <div class="modal-actions">
+        <button type="button" class="modal-close-btn" data-modal-close>OK</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* ==================== 15 LMS / RLS QUESTIONS ==================== */
+const questions = [
+  {
+    id: 1,
+    text: 'In the LMS algorithm, the filter weight update equation is:',
+    choices: [
+      'A. w(n+1) = w(n) − μ · e(n) · u(n)',
+      'B. w(n+1) = w(n) + μ · e(n) · u(n)',
+      'C. w(n+1) = w(n) + μ · d(n) · u(n)',
+      'D. w(n+1) = w(n) − μ · d(n) · u(n)'
+    ],
+    answer: 'B', selected: null
+  },
+  {
+    id: 2,
+    text: 'The step-size parameter μ in the LMS algorithm primarily governs:',
+    choices: [
+      'A. The filter order',
+      'B. The convergence speed and stability trade-off',
+      'C. The number of taps in the filter',
+      'D. The sampling frequency of the input signal'
+    ],
+    answer: 'B', selected: null
+  },
+  {
+    id: 3,
+    text: 'For the LMS algorithm to be stable, the step-size μ must satisfy:',
+    choices: [
+      'A. μ > 2 / λ_max',
+      'B. μ = λ_max',
+      'C. 0 < μ < 2 / λ_max',
+      'D. μ < 0'
+    ],
+    answer: 'C', selected: null
+  },
+  {
+    id: 4,
+    text: 'The computational complexity per iteration of the LMS algorithm for a filter of order N is:',
+    choices: [
+      'A. O(N³)',
+      'B. O(N²)',
+      'C. O(N)',
+      'D. O(1)'
+    ],
+    answer: 'C', selected: null
+  },
+  {
+    id: 5,
+    text: 'Compared to LMS, the RLS algorithm converges:',
+    choices: [
+      'A. Slower with lower computational cost',
+      'B. At the same rate but with higher stability',
+      'C. Faster but with higher computational complexity O(N²)',
+      'D. Slower with higher computational cost'
+    ],
+    answer: 'C', selected: null
+  },
+  {
+    id: 6,
+    text: 'In the RLS algorithm, the forgetting factor λ is typically chosen in the range:',
+    choices: [
+      'A. λ > 1',
+      'B. λ = 0',
+      'C. 0 < λ ≤ 1',
+      'D. λ < 0'
+    ],
+    answer: 'C', selected: null
+  },
+  {
+    id: 7,
+    text: 'Setting the forgetting factor λ = 1 in the RLS algorithm results in:',
+    choices: [
+      'A. Fastest forgetting of old data',
+      'B. Infinite memory — all past samples weighted equally',
+      'C. Filter weights becoming zero',
+      'D. Equivalent behavior to LMS'
+    ],
+    answer: 'B', selected: null
+  },
+  {
+    id: 8,
+    text: 'The RLS algorithm minimises which cost function?',
+    choices: [
+      'A. Sum of absolute errors',
+      'B. Exponentially weighted sum of squared errors',
+      'C. Instantaneous squared error only',
+      'D. Maximum absolute error'
+    ],
+    answer: 'B', selected: null
+  },
+  {
+    id: 9,
+    text: 'In the RLS algorithm, the inverse correlation matrix P(n) is updated using:',
+    choices: [
+      'A. Direct matrix inversion at every step',
+      'B. The matrix inversion lemma (Woodbury identity) for recursive update',
+      'C. LU decomposition',
+      'D. Gradient descent on P(n)'
+    ],
+    answer: 'B', selected: null
+  },
+  {
+    id: 10,
+    text: 'The Normalized LMS (NLMS) algorithm divides the update by ||u(n)||² in order to:',
+    choices: [
+      'A. Increase convergence speed unconditionally',
+      'B. Make the effective step-size independent of input signal power, improving stability',
+      'C. Reduce the filter order automatically',
+      'D. Remove the need for a desired signal d(n)'
+    ],
+    answer: 'B', selected: null
+  },
+  {
+    id: 11,
+    text: 'In adaptive noise cancellation for ECG, the primary input d(n) contains:',
+    choices: [
+      'A. Pure noise only',
+      'B. The ECG signal corrupted by noise (signal + noise)',
+      'C. The reference noise only',
+      'D. The filter output'
+    ],
+    answer: 'B', selected: null
+  },
+  {
+    id: 12,
+    text: 'In adaptive noise cancellation, the reference input u(n) must be:',
+    choices: [
+      'A. Correlated with the desired bio-signal',
+      'B. Correlated with the interference/noise, but uncorrelated with the bio-signal',
+      'C. Identical to the primary input',
+      'D. A white noise sequence'
+    ],
+    answer: 'B', selected: null
+  },
+  {
+    id: 13,
+    text: 'A larger eigenvalue spread of the input autocorrelation matrix R affects LMS by:',
+    choices: [
+      'A. Leading to faster convergence for all step sizes',
+      'B. Slowing convergence and requiring a smaller μ for stability',
+      'C. Having no effect on LMS behavior',
+      'D. Allowing a larger step-size μ'
+    ],
+    answer: 'B', selected: null
+  },
+  {
+    id: 14,
+    text: 'The excess mean square error (EMSE) in the LMS algorithm is caused by:',
+    choices: [
+      'A. Using too small a step-size μ',
+      'B. Weight noise (gradient noise) due to the stochastic gradient approximation',
+      'C. Choosing too large a filter order',
+      'D. Using a forgetting factor close to 1'
+    ],
+    answer: 'B', selected: null
+  },
+  {
+    id: 15,
+    text: 'A key advantage of RLS over LMS for tracking rapidly time-varying bio-signals is:',
+    choices: [
+      'A. RLS requires no desired signal d(n)',
+      'B. RLS is computationally cheaper per sample',
+      'C. RLS converges in O(N) iterations and is insensitive to eigenvalue spread',
+      'D. RLS operates without a reference signal'
+    ],
+    answer: 'C', selected: null
+  }
+];
+
+/* ==================== SETTINGS ==================== */
+const SIZE = 5;
+const container  = document.getElementById("mcq-container");
+const resultEl   = document.getElementById("result");
+const refreshBtn = document.getElementById("refresh-btn");
+const checkBtn   = document.getElementById("check-btn");
+
+let currentSetIndices = [];
+let setLocked = false;
+let totalCorrect   = readNum("asp_pretest_score");
+let totalAttempted = readNum("asp_pretest_total");
+let hasRendered = false;
+
+function readNum(key) {
+  try { const n = Number(localStorage.getItem(key)); return Number.isFinite(n) && n >= 0 ? n : 0; }
+  catch { return 0; }
+}
+function saveNums() {
+  try {
+    localStorage.setItem("asp_pretest_score",   String(totalCorrect));
+    localStorage.setItem("asp_pretest_total",   String(totalAttempted));
+    localStorage.setItem("asp_pretest_updated", String(Date.now()));
+  } catch(e) {}
+}
+
+/* ==================== PICK RANDOM SET ==================== */
+function pickRandomSet() {
+  const indices = Array.from({length: questions.length}, (_, i) => i);
+  for (let i = indices.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [indices[i], indices[j]] = [indices[j], indices[i]];
+  }
+  currentSetIndices = indices.slice(0, SIZE);
+  currentSetIndices.forEach(idx => { questions[idx].selected = null; });
+  setLocked = false;
+  renderSet();
+  if (hasRendered) {
+    showPopup("Questions refreshed. A new set of 5 has been loaded.", "Refreshed");
+  } else {
+    hasRendered = true;
+  }
+}
+
+/* ==================== RENDER ==================== */
+function renderSet() {
+  container.innerHTML = "";
+  resultEl.textContent = "";
+  resultEl.className = "mt-4 text-xl font-semibold";
+
+  currentSetIndices.forEach((qIdx, i) => {
+    const q = questions[qIdx];
+    const div = document.createElement("div");
+    div.className = "mcq";
+    div.dataset.answer = q.answer;
+    div.innerHTML = `
+      <p class="font-semibold mb-1"><span class="text-blue-700">Q${i + 1}.</span> ${q.text}</p>
+      ${q.choices.map(c => {
+        const val = c[0].toUpperCase();
+        return `<label class="option-label">
+          <input type="radio" name="q${q.id}" value="${val}" ${q.selected === val ? 'checked' : ''}>
+          <span>${c}</span>
+        </label>`;
+      }).join('')}
+    `;
+    container.appendChild(div);
+    div.querySelectorAll('input[type="radio"]').forEach(inp => {
+      inp.addEventListener('change', () => {
+        if (setLocked) return;
+        q.selected = inp.value;
+      });
+    });
+  });
+}
+
+/* ==================== CHECK ANSWERS ==================== */
+function checkAnswers() {
+  if (setLocked) {
+    showPopup("This set is already checked. Use Refresh Questions to load a new set.", "Notice");
+    return;
+  }
+
+  const unanswered = currentSetIndices.filter(idx => {
+    const q = questions[idx];
+    return !container.querySelector(`input[name="q${q.id}"]:checked`);
+  });
+
+  if (unanswered.length) {
+    showPopup("Please answer all questions before checking.", "Reminder");
+    return;
+  }
+
+  let score = 0;
+  container.querySelectorAll('.option-label').forEach(l =>
+    l.classList.remove('selected-option', 'disabled-option', 'correct-option', 'wrong-option', 'text-green-600', 'text-red-600')
+  );
+
+  currentSetIndices.forEach(idx => {
+    const q = questions[idx];
+    const sel = container.querySelector(`input[name="q${q.id}"]:checked`);
+    if (sel) {
+      if (sel.value === q.answer) {
+        score++;
+        sel.parentElement.classList.add('correct-option', 'text-green-600');
+      } else {
+        sel.parentElement.classList.add('wrong-option', 'text-red-600');
+        const correctInp = container.querySelector(`input[name="q${q.id}"][value="${q.answer}"]`);
+        if (correctInp) correctInp.parentElement.classList.add('correct-option', 'text-green-600');
+      }
+    }
+  });
+
+  // lock inputs
+  container.querySelectorAll('input[type="radio"]').forEach(inp => {
+    inp.disabled = true;
+    if (!inp.checked) inp.parentElement.classList.add('disabled-option');
+  });
+
+  totalCorrect   += score;
+  totalAttempted += SIZE;
+  saveNums();
+  setLocked = true;
+
+  resultEl.textContent = `Set Score: ${score} / ${SIZE}  •  Overall Score: ${totalCorrect} / ${totalAttempted}`;
+  resultEl.classList.add(score === SIZE ? 'text-green-600' : 'text-red-600');
+}
+
+/* ==================== MODAL HELPERS ==================== */
+let popupOnClose = null;
+
+function showPopup(message, title = "Alert", options = {}) {
+  popupOnClose = typeof options?.onClose === "function" ? options.onClose : null;
+  const modal = document.getElementById("warningModal");
+  if (!modal) { alert(message); return; }
+  document.getElementById("modalTitle").textContent   = title;
+  document.getElementById("modalMessage").textContent = message;
+  modal.classList.add("show");
+}
+
+function closePopup() {
+  const modal = document.getElementById("warningModal");
+  if (!modal) return;
+  modal.classList.remove("show");
+  if (popupOnClose) { popupOnClose(); popupOnClose = null; }
+}
+
+(function initModal() {
+  const modal = document.getElementById("warningModal");
+  if (!modal) return;
+  modal.querySelector("[data-modal-close]").addEventListener("click", closePopup);
+  modal.addEventListener("click", e => { if (e.target === modal) closePopup(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && modal.classList.contains("show")) closePopup(); });
+})();
+
+/* ==================== BIND BUTTONS ==================== */
+refreshBtn.addEventListener("click", () => { pickRandomSet(); refreshBtn.blur(); });
+checkBtn.addEventListener("click",   () => { checkAnswers();  checkBtn.blur();   });
+
+/* ==================== INIT ==================== */
+pickRandomSet();
+showPopup(
+  "Welcome to the Pre-Test for Adaptive Filtering using LMS and RLS Algorithms. You will receive 5 questions at a time. Each time you click Refresh Questions, a new set is loaded. All attempted questions are tracked in your score.",
+  "Welcome to the Pretest"
+);
+</script>
+
+</body>
+</html>
