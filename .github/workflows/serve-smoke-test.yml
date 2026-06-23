@@ -1,0 +1,35 @@
+name: CI — Serve and Smoke Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  serve-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install http-server
+        run: npm install -g http-server
+
+      - name: Start static server
+        run: |
+          nohup http-server -p 8080 . >/dev/null 2>&1 &
+          sleep 2
+
+      - name: Smoke test index
+        run: |
+          echo "Fetching http://localhost:8080/"
+          curl --fail --retry 3 --retry-delay 1 http://localhost:8080/ || (echo "Failed to fetch root page" && exit 1)
+
+      - name: List served files
+        run: ls -la
